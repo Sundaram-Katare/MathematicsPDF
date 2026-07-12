@@ -1,6 +1,6 @@
 import fs from "fs";
 import { model } from "../config/gemini.js";
-import { questionExtractionPrompt } from "../prompts/geminiPrompts.js";
+import { questionExtractionPrompt } from "../prompts/geminiPromptsText.js";
 
 function fileToGenerativePart(filePath, mimeType = null) {
     let type = mimeType;
