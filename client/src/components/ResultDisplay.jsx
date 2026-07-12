@@ -54,7 +54,7 @@ export default function ResultsDisplay({ data, type }) {
                     <div key={i} className="card result-card">
                         <div className="question-number">Question {img.questionNumber}</div>
                         {img.imageUrl ? (
-                            <img src={`http://localhost:5000${img.imageUrl}`} alt={`Question ${img.questionNumber}`} className="image-result" />
+                            <img src={`${import.meta.env.VITE_API_URL}${img.imageUrl}`} alt={`Question ${img.questionNumber}`} className="image-result" />
                         ) : (
                             <div className="message error">Failed to extract image for this question.</div>
                         )}
@@ -97,7 +97,7 @@ export default function ResultsDisplay({ data, type }) {
 
                         {q.containsDiagram && q.diagramUrl ? (
                             <div className="diagram-container" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-                                <img src={`http://localhost:5000${q.diagramUrl}`} alt={`Diagram for Question ${q.questionNumber}`} style={{ maxWidth: '100%', borderRadius: '8px' }} />
+                                <img src={`${import.meta.env.VITE_API_URL}${q.diagramUrl}`} alt={`Diagram for Question ${q.questionNumber}`} style={{ maxWidth: '100%', borderRadius: '8px' }} />
                             </div>
                         ) : q.containsDiagram && (
                             <div className="diagram-badge" style={{ marginTop: '1.5rem' }}>Contains Diagram (no image extracted)</div>

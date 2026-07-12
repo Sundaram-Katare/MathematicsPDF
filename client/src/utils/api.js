@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/extract";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/extract`;
 
 export const extractQuestions = async (formData) => {
     try {
