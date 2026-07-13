@@ -1,4 +1,4 @@
-import pdfPoppler from "pdf-poppler";
+import mupdf from "mupdf";
 import { exportImages } from "pdf-export-images";
 import fs from "fs";
 import path from "path";
@@ -6,29 +6,26 @@ import path from "path";
 export const convertPdfToImages = async (pdfPath, tempDir) => {
     try {
         const prefix = `page_${Date.now()}`;
-        const opts = {
-            format: 'png',
-            out_dir: tempDir,
-            out_prefix: prefix,
-            page: null 
-        };
-
-        await pdfPoppler.convert(pdfPath, opts);
-
-        const files = fs.readdirSync(tempDir);
+        const imagePaths = [];
         
-        const imagePaths = files
-            .filter(file => file.startsWith(prefix) && file.endsWith('.png'))
-            .map(file => path.join(tempDir, file))
-            .sort((a, b) => {
-                const numA = parseInt(a.match(/-(\d+)\.png$/)?.[1] || "0");
-                const numB = parseInt(b.match(/-(\d+)\.png$/)?.[1] || "0");
-                return numA - numB;
-            });
+        // Open PDF with MuPDF (pure WebAssembly, no OS binaries needed!)
+        const doc = mupdf.Document.openDocument(pdfPath);
+        const count = doc.countPages();
+        
+        for (let i = 0; i < count; i++) {
+            const page = doc.loadPage(i);
+            // Scale by 2 for higher resolution OCR reading
+            const pix = page.toPixmap(mupdf.Matrix.scale(2, 2), mupdf.ColorSpace.DeviceRGB, false, true);
+            const png = pix.asPNG();
+            
+            const imagePath = path.join(tempDir, `${prefix}-${i + 1}.png`);
+            fs.writeFileSync(imagePath, png);
+            imagePaths.push(imagePath);
+        }
 
         return imagePaths;
     } catch (error) {
-        console.error("Error converting PDF to images using pdf-poppler:", error);
+        console.error("Error converting PDF to images using mupdf:", error);
         throw error;
     }
 };

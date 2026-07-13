@@ -21,7 +21,6 @@
     "multer": "^2.2.0",
     "mupdf": "^1.28.0",
     "pdf-export-images": "^1.2.0",
-    "pdf-poppler": "^0.2.3",
     "sharp": "^0.35.3"
   }
 }
