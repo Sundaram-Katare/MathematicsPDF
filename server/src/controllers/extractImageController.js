@@ -25,7 +25,8 @@ export const extractQuestionsImage = async (req, res) => {
 
         // 2. Send PNGs to Gemini
         const count = questionCount ? parseInt(questionCount, 10) : null;
-        let questions = await extractQuestionsFromImages(generatedImagePaths, count);
+        let parsedResult = await extractQuestionsFromImages(generatedImagePaths, count);
+        let questions = Array.isArray(parsedResult) ? parsedResult : (parsedResult.questions || []);
 
         // 3. Crop Images
         questions = await cropQuestions(questions, generatedImagePaths, tempDir);
@@ -33,6 +34,7 @@ export const extractQuestionsImage = async (req, res) => {
         // Cleanup the original high-res pages, keep the cropped ones in temp
         removeFiles(generatedImagePaths);
         
+        // 4. Format Output
         return res.status(200).json({
             success: true,
             images: questions.map(q => ({
@@ -42,6 +44,7 @@ export const extractQuestionsImage = async (req, res) => {
         });
 
     } catch (error) {
+        import("fs").then(fs => fs.writeFileSync("debug_error.log", error.stack || error.toString()));
         console.error("Extraction Image Controller Error:", error);
         removeFiles(generatedImagePaths);
         return res.status(500).json({ success: false, message: "Internal server error during image extraction." });

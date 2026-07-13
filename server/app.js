@@ -3,11 +3,18 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from 'url';
 import extractRoutes from "./src/routes/extractRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Ensure temp and uploads directories exist
+const tempDir = path.join(__dirname, 'temp');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const app = express();
 

@@ -27,7 +27,8 @@ export const extractQuestionsText = async (req, res) => {
 
         // 2. Send PNGs and raw images to Gemini
         const count = questionCount ? parseInt(questionCount, 10) : null;
-        let questions = await extractQuestionsFromImages(generatedImagePaths, rawImagePaths, count);
+        let parsedResult = await extractQuestionsFromImages(generatedImagePaths, rawImagePaths, count);
+        let questions = Array.isArray(parsedResult) ? parsedResult : (parsedResult.questions || []);
 
         // 3. Process Text Output
         // Map the diagramImageIndex to the URL of the native extracted image
