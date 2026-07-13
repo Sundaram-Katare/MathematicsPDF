@@ -64,6 +64,11 @@ PORT=5000
 GEMINI_API_KEY=your_api_key_here
 ```
 
+Create a `.env` file inside the `client/` directory and add your key:
+```env
+VITE_API_URL=https://localhost:5000
+```
+
 ### 4. Running the Application Locally
 
 Start the backend server:
